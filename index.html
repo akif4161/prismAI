@@ -3,118 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRISM 💎</title>
+<title>PRISM AI</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:#0a0a0f;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;height:100vh}
-  header{padding:16px;text-align:center;border-bottom:1px solid #222;font-size:22px;font-weight:900}
-  header span{color:#a78bfa}
-  #login{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;overflow-y:auto}
-  #login input{width:100%;max-width:320px;background:#1f1f2a;border:1px solid #333;color:#fff;padding:14px;border-radius:12px;outline:none}
-  #login button{width:100%;max-width:320px;background:#7c3aed;color:#fff;border:none;padding:14px;border-radius:12px;font-weight:900;cursor:pointer}
-  #login .google{background:#fff;color:#000}
-  #login .guest{background:#2a2a35;color:#fff;border:1px solid #444}
-  #chat{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;display:none}
-  .msg{max-width:85%;padding:12px 14px;border-radius:16px;line-height:1.5;font-size:15px}
-  .user{background:#7c3aed;align-self:flex-end;border-bottom-right-radius:4px}
-  .ai{background:#1f1f2a;align-self:flex-start;border-bottom-left-radius:4px;white-space:pre-wrap}
-  #form{display:none;gap:8px;padding:12px;border-top:1px solid #222}
-  #form input{flex:1;background:#1f1f2a;border:1px solid #333;color:#fff;padding:14px;border-radius:12px;outline:none}
-  #form button{background:#7c3aed;color:#fff;border:none;padding:14px 20px;border-radius:12px;font-weight:900;cursor:pointer}
-  #userInfo{font-size:13px;color:#aaa;text-align:center;padding:6px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#020617;color:white;min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,#1e40af55,transparent 40%),radial-gradient(circle at 80% 80%,#06b6d455,transparent 40%);pointer-events:none}
+.logo{font-size:42px;font-weight:900;letter-spacing:4px;text-align:center;margin-top:40px;background:linear-gradient(90deg,#60a5fa,#22d3ee,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px #3b82f6)}
+.sub{text-align:center;color:#94a3b8;margin:8px 0 25px}
+.card{max-width:420px;margin:0 auto;background:#0f172aee;border:1px solid #1e3a8a;border-radius:20px;padding:22px;box-shadow:0 0 40px #2563eb44}
+input,select{width:100%;padding:13px;margin:8px 0;background:#020617;border:1px solid #1e40af;border-radius:12px;color:white;outline:none}
+button{width:100%;padding:13px;margin:8px 0;border:none;border-radius:12px;font-weight:700;cursor:pointer}
+.btn-blue{background:linear-gradient(90deg,#2563eb,#06b6d4);color:white;box-shadow:0 0 20px #2563eb88}
+.btn-ghost{background:#1e293b;color:white;border:1px solid #334155}
+.btn-code{background:#7c3aed;color:white}
+#chatPage{display:none;max-width:800px;margin:0 auto;padding:15px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px}
+.pill{padding:6px 12px;border-radius:20px;background:#1e293b;border:1px solid #3b82f6;font-size:13px;cursor:pointer}
+.pill.active{background:#2563eb}
+#messages{height:60vh;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:85%;padding:12px 14px;border-radius:16px;line-height:1.5;white-space:pre-wrap}
+.user{background:#2563eb;align-self:flex-end}
+.ai{background:#1e293b;border:1px solid #334155;align-self:flex-start}
+pre{background:#020617;border:1px solid #2563eb;padding:12px;border-radius:12px;overflow-x:auto;margin:10px 0;position:relative}
+.copyBtn{position:absolute;top:6px;right:6px;background:#2563eb;color:white;border:none;padding:5px 10px;border-radius:8px;font-size:12px;cursor:pointer}
+.inputRow{display:flex;gap:8px;margin-top:10px}
+.inputRow input{flex:1}
+.inputRow button{width:90px}
+.badge{font-size:12px;color:#67e8f9;text-align:center;margin:5px}
 </style>
 </head>
 <body>
-<header>PRISM <span>💎</span></header>
-<div id="login">
-  <h2>PRISM'e Hoş Geldin 👑</h2>
-  <p style="color:#aaa">Nasıl girmek istersin?</p>
-  <button class="guest" id="guestBtn">👤 Misafir Olarak Devam Et</button>
-  <p style="color:#666">— veya e-posta ile —</p>
-  <input id="email" placeholder="E-posta" type="email" />
-  <input id="pass" placeholder="Şifre" type="password" />
-  <button id="emailBtn">E-posta ile Giriş / Kayıt Ol</button>
-  <p id="loginError" style="color:#ff6b6b;font-size:13px"></p>
+
+<!-- GİRİŞ -->
+<div id="loginPage">
+<div class="logo">PRISM AI</div>
+<div class="sub">Geleceğin Yapay Zekası • Neon Sürüm</div>
+<div class="card">
+<button class="btn-ghost" onclick="guestLogin()">👤 Misafir Olarak Devam Et</button>
+<div style="text-align:center;color:#64748b;margin:10px">— veya e-posta ile —</div>
+<input id="email" type="email" placeholder="E-posta">
+<input id="pass" type="password" placeholder="Şifre">
+<button class="btn-blue" onclick="login()">E-posta ile Giriş / Kayıt Ol</button>
+<p style="font-size:12px;color:#64748b;text-align:center;margin-top:10px">Devam ederek Gizlilik Politikası'nı kabul etmiş olursun.</p>
 </div>
-<div id="userInfo"></div>
-<div id="chat"></div>
-<form id="form">
-  <input id="input" placeholder="Bir şey yaz..." autocomplete="off" />
-  <button>Gönder</button>
-</form>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script>
+</div>
+
+<!-- CHAT -->
+<div id="chatPage">
+<div class="topbar">
+<b style="font-size:22px;background:linear-gradient(90deg,#60a5fa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent">PRISM AI</b>
+<button onclick="logout()" style="width:auto;padding:8px 14px;background:#1e293b;color:white;border:1px solid #334155;border-radius:10px">Çıkış</button>
+</div>
+<div style="display:flex;gap:8px;justify-content:center">
+<div class="pill active" id="pillNormal" onclick="setModel('normal')">⚡ Normal</div>
+<div class="pill" id="pillUltra" onclick="setModel('ultra')">💎 Ultra</div>
+<div class="pill" id="pillCode" onclick="toggleCode()">💻 Kod Yaz</div>
+</div>
+<div class="badge" id="modelInfo">Model: Normal • Kod Modu: Kapalı</div>
+<div id="messages"></div>
+<div class="inputRow">
+<input id="msgInput" placeholder="PrismAI'ye sor... (örn: bana python ile hesap makinesi yaz)">
+<button class="btn-blue" onclick="send()">Gönder</button>
+</div>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signInAnonymously,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// 1. FIREBASE AYARIN - BURAYA KENDİ AYARINI YAPIŞTIR
 const firebaseConfig = {
-  apiKey: "AIzaSyDVl8A6jOmqFkP2OujjBuC8MTqBoJiMDz8",
+  apiKey: "FIREBASE_AYARIN",
   authDomain: "prismai-7933b.firebaseapp.com",
   projectId: "prismai-7933b",
   storageBucket: "prismai-7933b.firebasestorage.app",
   messagingSenderId: "818649887767",
-  appId: "1:818649887767:web:e7fab8d446688671331852",
-  measurementId: "G-N2YZ29DFNE"
+  appId: "FIREBASE_APP_ID"
 };
-const GROQ_KEY = "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";
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const loginDiv = document.getElementById('login');
-const chatDiv = document.getElementById('chat');
-const form = document.getElementById('form');
-const input = document.getElementById('input');
-const userInfo = document.getElementById('userInfo');
-let userName = 'Dostum';
-let history = [];
-function addMsg(text, who){
-  const d = document.createElement('div');
-  d.className = 'msg ' + who;
-  d.textContent = text;
-  chatDiv.appendChild(d);
-  chatDiv.scrollTop = chatDiv.scrollHeight;
-  return d;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// 2. GROQ ANAHTARIN - YENİ ALDIĞIN ANAHTARI BURAYA
+const GROQ_KEY = "GROQ_ANAHTARIN_BURAYA";
+
+let currentModel = "normal";
+let codeMode = false;
+let isUltra = false;
+
+window.setModel = (m)=>{
+  currentModel = m;
+  isUltra = (m==="ultra");
+  document.getElementById('pillNormal').classList.toggle('active', m==="normal");
+  document.getElementById('pillUltra').classList.toggle('active', m==="ultra");
+  if(!isUltra){ codeMode=false; document.getElementById('pillCode').classList.remove('active'); }
+  updateInfo();
+  if(isUltra) addMsg("ai","💎 Ultra aktif! Artık Kod Yaz modunu açabilirsin. Kod yazdırmak için 💻 Kod Yaz'a bas.");
 }
-function openChat(user, isGuest){
-  loginDiv.style.display = 'none';
-  chatDiv.style.display = 'flex';
-  form.style.display = 'flex';
-  if(isGuest){ userName = 'Misafir'; userInfo.textContent = 'Misafir olarak girdin 👤'; }
-  else { userName = user.displayName || user.email.split('@')[0] || 'Dostum'; userInfo.textContent = 'Giriş yapıldı: ' + user.email; }
-  addMsg('Tekrar hoş geldin ' + userName + ' 👑 Ne soracaksın?', 'ai');
+window.toggleCode = ()=>{
+  if(!isUltra){ alert("Kod Yaz modu sadece Ultra'da çalışıyor kral! Önce Ultra'yı seç."); return; }
+  codeMode = !codeMode;
+  document.getElementById('pillCode').classList.toggle('active', codeMode);
+  updateInfo();
+  if(codeMode) addMsg("ai","💻 Kod Modu AÇIK. Ne kodu istiyorsun? Örnek: 'Python ile şifre üretici yaz' / 'HTML ile portföy sitesi yap'");
 }
-document.getElementById('googleBtn').onclick = async ()=>{
-  try{ const p = new firebase.auth.GoogleAuthProvider(); await auth.signInWithPopup(p); }
-  catch(e){ document.getElementById('loginError').textContent = e.message; }
-};
-document.getElementById('guestBtn').onclick = async ()=>{
-  try{ await auth.signInAnonymously(); }
-  catch(e){ openChat(null, true); }
-};
-document.getElementById('emailBtn').onclick = async ()=>{
-  const email = document.getElementById('email').value.trim();
-  const pass = document.getElementById('pass').value;
-  try{ await auth.signInWithEmailAndPassword(email, pass); }
-  catch(e){ try{ await auth.createUserWithEmailAndPassword(email, pass); } catch(e2){ document.getElementById('loginError').textContent = e2.message; } }
-};
-auth.onAuthStateChanged(user=>{ if(user){ if(user.isAnonymous) openChat(user, true); else openChat(user, false); } });
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const text = input.value.trim();
-  if(!text) return;
-  addMsg(text, 'user');
-  input.value = '';
-  const loading = addMsg('Yazıyor...', 'ai');
-  history.push({role:'user', content:text});
-  if(history.length > 10) history = history.slice(-10);
+function updateInfo(){ document.getElementById('modelInfo').innerText = `Model: ${currentModel.toUpperCase()} • Kod Modu: ${codeMode?"AÇIK 💻":"Kapalı"}`; }
+
+window.guestLogin = async ()=>{ await signInAnonymously(auth); }
+window.login = async ()=>{
+  const e=document.getElementById('email').value, p=document.getElementById('pass').value;
+  if(!e||!p) return alert("E-posta ve şifre gir");
+  try{ await signInWithEmailAndPassword(auth,e,p); }catch{ await createUserWithEmailAndPassword(auth,e,p); }
+}
+window.logout = ()=> signOut(auth);
+
+onAuthStateChanged(auth,(u)=>{
+  document.getElementById('loginPage').style.display = u?"none":"block";
+  document.getElementById('chatPage').style.display = u?"block":"none";
+});
+
+function addMsg(role, text){
+  const div=document.createElement('div'); div.className='msg '+role;
+  // Kod bloğu varsa renklendir + kopyala butonu ekle
+  if(text.includes("```")){
+    let html = text.replace(/```(\w*)\n([\s\S]*?)```/g,(m,lang,code)=>{
+      return `<pre><button class="copyBtn" onclick="navigator.clipboard.writeText(this.parentElement.innerText.replace('Kopyala',''));this.innerText='Kopyalandı!'">Kopyala</button><code>${code.replace(/</g,'&lt;')}</code></pre>`;
+    });
+    div.innerHTML = html;
+  } else div.innerText = text;
+  document.getElementById('messages').appendChild(div);
+  document.getElementById('messages').scrollTop = 999999;
+}
+
+window.send = async ()=>{
+  const inp=document.getElementById('msgInput'); const q=inp.value.trim(); if(!q) return;
+  addMsg('user', q); inp.value="";
+  let system = "Sen PRISM AI'sın, Türkçe cevap ver, samimi ve akıllı ol.";
+  let model = "llama-3.1-8b-instant";
+  if(currentModel==="ultra"){
+    model = "llama-3.3-70b-versatile";
+    system = "Sen PRISM AI Ultra'sın. Çok zeki, detaylı ve profesyonelsin. Türkçe cevap ver.";
+    if(codeMode){
+      system = "Sen PRISM AI Ultra Kod Uzmanısın. Kullanıcı ne isterse eksiksiz, çalışan, hatasız kod yaz. Kodu ```dil ...``` içinde ver. Sonra kısaca Türkçe açıkla. Kodun başına yorum satırı ekle. Asla yarım kod verme.";
+    }
+  }
+  addMsg('ai',"Yazıyor...");
   try{
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
-      body: JSON.stringify({ model: 'openai/gpt-oss-20b', messages: [{role:'system', content:'Sen PRISM adında samimi, genç, Türkçe konuşan zeki asistansın. Kullanıcının adı '+userName+'. Ona ismiyle hitap et. Kısa ve eğlenceli cevap ver.'}, ...history], temperature: 0.7 })
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions",{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+GROQ_KEY,"Content-Type":"application/json"},
+      body: JSON.stringify({model:model, messages:[{role:"system",content:system},{role:"user",content:q}]})
     });
     const data = await res.json();
-    if(data.error) loading.textContent = 'Hata: ' + data.error.message;
-    else { loading.textContent = data.choices[0].message.content; history.push({role:'assistant', content: loading.textContent}); }
-  }catch(err){ loading.textContent = 'Bağlantı hatası: ' + err.message; }
-});
+    document.getElementById('messages').lastChild.remove();
+    addMsg('ai', data.choices[0].message.content);
+  }catch(e){ document.getElementById('messages').lastChild.remove(); addMsg('ai',"Hata oldu kral, anahtarını kontrol et."); }
+}
+document.getElementById('msgInput').addEventListener('keydown',e=>{ if(e.key==="Enter") send(); });
 </script>
 </body>
 </html>
