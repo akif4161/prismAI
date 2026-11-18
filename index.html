@@ -109,7 +109,7 @@ form.addEventListener('submit', async (e)=>{
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
-      body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{role:'system', content:'Sen PRISM adında samimi, genç, Türkçe konuşan zeki asistansın. Kullanıcının adı '+userName+'. Ona ismiyle hitap et. Kısa ve eğlenceli cevap ver.'}, ...history], temperature: 0.7 })
+      body: JSON.stringify({ model: 'openai/gpt-oss-20b', messages: [{role:'system', content:'Sen PRISM adında samimi, genç, Türkçe konuşan zeki asistansın. Kullanıcının adı '+userName+'. Ona ismiyle hitap et. Kısa ve eğlenceli cevap ver.'}, ...history], temperature: 0.7 })
     });
     const data = await res.json();
     if(data.error) loading.textContent = 'Hata: ' + data.error.message;
